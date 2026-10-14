@@ -1,0 +1,30 @@
+{
+  "project": "csci5253-lab6-ep-20261013",
+  "date": "2026-10-13",
+  "instances": [
+    {
+      "name": "lab6-client",
+      "zone": "https://www.googleapis.com/compute/v1/projects/csci5253-lab6-ep-20261013/zones/us-west1-a",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/csci5253-lab6-ep-20261013/zones/us-west1-a/machineTypes/e2-standard-2",
+      "status": "RUNNING",
+      "internal_ip": "10.138.0.2"
+    },
+    {
+      "name": "lab6-server-west",
+      "zone": "https://www.googleapis.com/compute/v1/projects/csci5253-lab6-ep-20261013/zones/us-west1-a",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/csci5253-lab6-ep-20261013/zones/us-west1-a/machineTypes/e2-standard-2",
+      "status": "RUNNING",
+      "internal_ip": "10.138.0.3"
+    },
+    {
+      "name": "lab6-server-europe",
+      "zone": "https://www.googleapis.com/compute/v1/projects/csci5253-lab6-ep-20261013/zones/europe-west3-a",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/csci5253-lab6-ep-20261013/zones/europe-west3-a/machineTypes/e2-standard-2",
+      "status": "RUNNING",
+      "internal_ip": "10.156.0.2"
+    }
+  ],
+  "python": "3.13.5 on Debian 13 (cloud); 3.14.2 on macOS (development)",
+  "image": "debian-13-trixie-v20261006",
+  "image_bytes": 1655274
+}

@@ -64,3 +64,41 @@ When you're done, edit a file `SOLUTION.md` that includes a table showing the ti
 You should measure the basic latency  using the `ping` command - this can be construed to be the latency without any RPC or python overhead.
 
 You should examine your results and provide a short paragraph with your observations of the performance difference between REST and gRPC as described in `SOLUTIONS.md`.
+
+## Running this implementation
+
+Install with `uv sync`, or create a virtual environment and run
+`python -m pip install -r requirements.txt`.
+Generate the gRPC bindings after changing the protocol:
+
+```sh
+python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. lab6.proto
+```
+
+Start each server in its own terminal:
+
+```sh
+python rest-server.py
+python grpc-server.py
+```
+
+Both clients accept `add`, `rawimage`, `dotproduct`, and `jsonimage`:
+
+```sh
+python rest-client.py localhost dotproduct 1000
+python grpc-client.py localhost dotproduct 1000
+python check.py
+python benchmark.py --same-zone SERVER_INTERNAL_IP --different-region EUROPE_INTERNAL_IP
+```
+
+REST uses port 5000 and a fresh connection per call. gRPC uses port 50051
+and one channel per client run. Payloads are prepared before timing, including
+100-element random vectors and the supplied JPEG. Each run performs one
+untimed warm-up call and verifies every measured reply. Debug output is disabled
+for recorded benchmarks. The gRPC float fields use single precision, so the
+clients allow a small tolerance when comparing dot products.
+
+`benchmark.py` must run on the western client VM with both servers running
+locally as well. It records 1,000 calls per method for localhost and same-zone,
+100 for different-region, and twenty ping samples per location. Results are
+saved under `output/`; `SOLUTION.md` contains the completed comparison.

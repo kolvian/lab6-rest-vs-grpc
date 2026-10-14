@@ -1,78 +1,52 @@
 #!/usr/bin/env python3
-
-from flask import Flask, request, Response
-import jsonpickle
-from PIL import Image
-import io
 import argparse
-
-# Initialize the Flask application
-app = Flask(__name__)
-
 import logging
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.DEBUG)
+
+from flask import Flask, jsonify, request
+
+from common import decode_image, dot_product, image_size
+
+app = Flask(__name__)
+logging.getLogger("werkzeug").setLevel(logging.ERROR)
 
 
-@app.route('/api/add/<int:a>/<int:b>', methods=['GET', 'POST'])
+@app.errorhandler(TypeError)
+@app.errorhandler(ValueError)
+def bad_request(error):
+    return jsonify(error=str(error)), 400
+
+
+def json_body():
+    data = request.get_json()
+    if not isinstance(data, dict):
+        raise TypeError("body must be a JSON object")
+    return data
+
+
+@app.route(
+    "/api/add/<int(signed=True):a>/<int(signed=True):b>", methods=["GET", "POST"]
+)
 def add(a, b):
-    response = {'sum': str(a + b)}
-    response_pickled = jsonpickle.encode(response)
-    return Response(
-        response=response_pickled,
-        status=200,
-        mimetype="application/json"
-    )
+    return jsonify(sum=a + b)
 
 
-@app.route('/api/rawimage', methods=['POST'])
+@app.post("/api/rawimage")
 def rawimage():
-    r = request
-
-    # Convert the data to a PIL image type so we can extract dimensions
-    try:
-        ioBuffer = io.BytesIO(r.data)
-        img = Image.open(ioBuffer)
-
-        response = {
-            'width': img.size[0],
-            'height': img.size[1]
-        }
-    except:
-        response = {'width': 0, 'height': 0}
-
-    response_pickled = jsonpickle.encode(response)
-    return Response(
-        response=response_pickled,
-        status=200,
-        mimetype="application/json"
-    )
+    return jsonify(image_size(request.data))
 
 
-@app.route('/api/dotproduct', methods=['POST'])
+@app.post("/api/dotproduct")
 def dotproduct():
-    pass
+    data = json_body()
+    return jsonify(dotproduct=dot_product(data.get("a"), data.get("b")))
 
 
-@app.route('/api/jsonimage', methods=['POST'])
+@app.post("/api/jsonimage")
 def jsonimage():
-    pass
+    return jsonify(image_size(decode_image(json_body().get("image"))))
 
 
-if __name__ == '__main__':
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser(
-        description='Flask REST server'
-    )
-
-    parser.add_argument(
-        '-p', '--port',
-        type=int,
-        default=5000,
-        help='Port on which to run the server (default: 5000)'
-    )
-
-    args = parser.parse_args()
-
-    # Start Flask app
-    app.run(host='0.0.0.0', port=args.port)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="REST server")
+    parser.add_argument("-p", "--port", type=int, default=5000)
+    app.run(host="0.0.0.0", port=parser.parse_args().port)

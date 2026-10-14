@@ -1,0 +1,47 @@
+{
+  "Local": {
+    "host": "localhost",
+    "repetitions": 1000,
+    "methods": {
+      "REST add": 2.704319,
+      "REST rawimage": 5.015682,
+      "REST dotproduct": 3.714498,
+      "REST jsonimage": 32.100473,
+      "gRPC add": 0.981746,
+      "gRPC rawimage": 8.466093,
+      "gRPC dotproduct": 0.992854,
+      "gRPC jsonimage": 23.450459
+    },
+    "ping_ms": 0.05
+  },
+  "Same-Zone": {
+    "host": "10.138.0.3",
+    "repetitions": 1000,
+    "methods": {
+      "REST add": 3.047559,
+      "REST rawimage": 7.206519,
+      "REST dotproduct": 3.663571,
+      "REST jsonimage": 32.12433,
+      "gRPC add": 1.246884,
+      "gRPC rawimage": 8.754777,
+      "gRPC dotproduct": 1.4573,
+      "gRPC jsonimage": 19.544383
+    },
+    "ping_ms": 0.422
+  },
+  "Different Region": {
+    "host": "10.156.0.2",
+    "repetitions": 100,
+    "methods": {
+      "REST add": 354.286034,
+      "REST rawimage": 1424.157092,
+      "REST dotproduct": 332.831076,
+      "REST jsonimage": 1504.887373,
+      "gRPC add": 160.313734,
+      "gRPC rawimage": 188.162239,
+      "gRPC dotproduct": 161.727431,
+      "gRPC jsonimage": 202.740524
+    },
+    "ping_ms": 141.126
+  }
+}
